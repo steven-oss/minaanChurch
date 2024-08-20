@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -8,20 +8,24 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import { Typography } from '@material-ui/core';
+import { Button, Modal, Typography } from '@material-ui/core';
 
 interface Column {
-  id: 'name' | 'isAdult' | 'notes';
+  id: 'name' | 'isAdult' | 'notes'|'action';
   label: string;
 }
 
 const columns: Column[] = [
   { id: 'name', label: '姓名' },
-  { id: 'isAdult', label: '是否為成人會員'},
+  { id: 'isAdult', label: '是否為成人'},
   {
     id: 'notes',
     label: '標記(小筆記)'
   },
+  {
+    id:'action',
+    label:'會友編輯'
+  }
 ];
 
 interface Data {
@@ -43,19 +47,33 @@ const rows = [
 const useStyles = makeStyles({
   root: {
     width: '100%',
-    marginTop:'16px',
-    padding:'16px'
+    marginTop: '16px',
+    padding: '16px',
   },
   container: {
     maxHeight: 440,
-    marginTop:'16px'
+    marginTop: '16px',
   },
+  tableRow:{
+    fontSize:'24px'
+  }
+  ,
+  tableCell: {
+    fontSize: '18px', // Adjust the font size here
+  },
+  button:{
+    fontSize:'18px' 
+  }
 });
 
-export default function MemberManagementTable() {
+interface Props{
+  onButtonClick:(name:string)=>void;
+}
+export default function MemberManagementTable(props:Props) {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const {onButtonClick} = props;
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -65,6 +83,16 @@ export default function MemberManagementTable() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  
+
+  const body = (
+    <div>
+      <h2 id="simple-modal-title">Text in a modal</h2>
+      <p id="simple-modal-description">
+        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+      </p>
+    </div>
+  );
 
   return (
     <Paper className={classes.root} elevation={3}>
@@ -74,9 +102,7 @@ export default function MemberManagementTable() {
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                >
+                <TableCell key={column.id} className={classes.tableRow}>
                   {column.label}
                 </TableCell>
               ))}
@@ -87,12 +113,27 @@ export default function MemberManagementTable() {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.isAdult}>
                   {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} >
-                        {value}
-                      </TableCell>
-                    );
+                    if (column.id === 'action') {
+                      return (
+                        <TableCell key={column.id} className={classes.tableCell}>
+                          <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => onButtonClick(row.name)}
+                          >
+                            編輯
+                          </Button>
+                        </TableCell>
+                      );
+                    } else {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} className={classes.tableCell}>
+                          {value}
+                        </TableCell>
+                      );
+                    }
                   })}
                 </TableRow>
               );
