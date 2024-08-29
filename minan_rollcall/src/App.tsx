@@ -6,21 +6,22 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Layout from './module/layout/index.tsx';
+import Layout from './pages/layout/index.tsx';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import MemberManagement from './module/memberManagement/index.tsx';
 import HomePage from './pages/HomePage.tsx';
+import MemberManagementViewScreen from './pages/memberManagement/MemberManagementViewScreen.tsx';
+import Apps from './pages/layout/index.tsx';
 
 export default function App() {
 
   return (
-    <Layout>
+    <Apps>
         <Routes>
-          <Route index element={<HomePage />} />
-          <Route path="/MemberManagement/*" element={<MemberManagement />} />
+          <Route index element={<MemberManagementViewScreen />} />
+          <Route path="/MemberManagement/*" element={<MemberManagementViewScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-    </Layout>
+    </Apps>
   );
 }
 
