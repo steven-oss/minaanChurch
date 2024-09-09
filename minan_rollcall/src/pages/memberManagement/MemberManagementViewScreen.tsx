@@ -1,38 +1,37 @@
 import React, { useState } from "react";
-import { Backdrop, Box, createStyles, Fade, Grid, makeStyles, Modal, Paper, Theme } from "@material-ui/core";
 import MemberManagementTable from "../../components/memberManagement/MemberManagementTable.tsx";
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-      modal: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      paper: {
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-      },
-    }),
-  );
+import { Col, Row } from "antd";
+import MemberManagementButton from "../../components/memberManagement/MemberManagementButton.tsx";
+import MemberManagementModal from "../../components/memberManagement/MemberManagementModal.tsx";
   
 export default function MemberManagementViewScreen() {
-    const classes = useStyles();
 
-    const [open,setOpen] = useState(false)
-    
-    const handleButtonClick = (name:string)=>{
-        setOpen(true);
-      };
-    const handleModalClose=()=>{
-        setOpen(false);
+    const [open,setOpen] = useState<boolean>(false)
+
+    const handleCreateButton = ()=>{
+      setOpen(true);
+    };
+    const handleCreateButtonOK=()=>{
+      setOpen(false);
     }
+    const handleCreateButtonCancel=()=>{
+      setOpen(false);
+    }
+   
+    const handleEditButton = (key:number)=>{
+      setOpen(true);
+      console.log(key);
+    };
+
     return(
         <>
-        <MemberManagementTable onButtonClick={(name:string)=>handleButtonClick(name)}/>
-        
+         <Row justify="end" style={{ marginBottom: 16 }}>
+            <Col>
+              <MemberManagementButton actionName="新增會友" onClick={handleCreateButton} />
+            </Col>
+          </Row>
+          <MemberManagementTable onEditButton={(key:number)=>handleEditButton(key)}/>
+          <MemberManagementModal open={open} onCreateButtonOK={handleCreateButtonOK} onCreateButtonCancel={handleCreateButtonCancel}/>
         </>
     )
 }
