@@ -1,5 +1,6 @@
 import { Modal } from "antd";
 import React from "react";
+import MemberManagementForm from "./MemberManagementForm.tsx";
 
 interface Props{
     open:boolean;
@@ -9,8 +10,8 @@ interface Props{
 export default function MemberManagementModal(props:Props){
     const {open,onCreateButtonOK,onCreateButtonCancel} = props;
     return(
-        <Modal open={open} onOk={onCreateButtonOK} onCancel={onCreateButtonCancel}>
-            <p>123...</p>
+        <Modal open={open} onOk={onCreateButtonOK} onCancel={onCreateButtonCancel} centered>
+            <MemberManagementForm/>
         </Modal>
     )
 }
