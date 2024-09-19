@@ -11,13 +11,14 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
 import MemberManagementViewScreen from './pages/memberManagement/MemberManagementViewScreen.tsx';
 import Apps from './pages/layout/index.tsx';
+import RollCallListViewScreen from './pages/rollCallList/RollCallListViewScreen.tsx';
 
 export default function App() {
 
   return (
     <Apps>
         <Routes>
-          <Route index element={<MemberManagementViewScreen />} />
+          <Route index element={<RollCallListViewScreen />} />
           <Route path="/MemberManagement/*" element={<MemberManagementViewScreen />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
