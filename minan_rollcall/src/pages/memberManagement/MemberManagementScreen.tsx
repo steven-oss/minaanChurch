@@ -4,7 +4,7 @@ import { Col, Row } from "antd";
 import MemberManagementButton from "../../components/memberManagement/MemberManagementButton.tsx";
 import MemberManagementModal from "../../components/memberManagement/MemberManagementModal.tsx";
   
-export default function MemberManagementViewScreen() {
+export default function MemberManagementScreen() {
 
     const [open,setOpen] = useState<boolean>(false)
     const [selectedMember, setSelectedMember] = useState<any>(null); 
