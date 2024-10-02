@@ -1,5 +1,5 @@
-import { Button, Col, Row } from "antd";
 import React from "react";
+import { Button, Grid } from "@mui/material";
 
 interface ButtonItem {
     key: number;
@@ -17,21 +17,25 @@ export default function RollCallListDynamicButton(props: Props) {
     const { dynamicButton, onClick, universalIndex } = props;
 
     // Determine the column span based on the number of items
-    const colSpan = dynamicButton.length < 4 ? 24 / dynamicButton.length : 6;
+    const gridSize = dynamicButton.length < 4 ? 12 / dynamicButton.length : 3;
+
+    const buttonStyle = {
+        width: dynamicButton.length === 2 ? '150px' : '100%', // Set a smaller maxWidth for 2 buttons
+    };
 
     return (
-        <Row gutter={[16, 16]} justify="center">
+        <Grid container spacing={2} justifyContent="center">
             {dynamicButton.map((item) => (
-                <Col key={item.key} xs={24} sm={12} md={colSpan} lg={colSpan}>
+                <Grid item xs={12} sm={gridSize} md={gridSize} key={item.key}>
                     <Button
-                        type={universalIndex === item.key ? "primary" : "default"} // Compare with item's key
-                        style={{ width: '100%' }}
+                        variant={universalIndex === item.key ? "contained" : "outlined"} // MUI button variant
+                        sx={buttonStyle}
                         onClick={() => onClick(item.key)} // Pass the item's key
                     >
                         {item.modeName || item.sessionName} {/* Display the correct label */}
                     </Button>
-                </Col>
+                </Grid>
             ))}
-        </Row>
+        </Grid>
     );
 }

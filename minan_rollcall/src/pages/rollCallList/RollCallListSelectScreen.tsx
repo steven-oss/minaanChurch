@@ -1,16 +1,15 @@
-import { Col, Row, message } from "antd";
 import React, { useState } from "react";
-import { Outlet, Link } from "react-router-dom"; // 引入 Outlet
+import { Typography, Grid, Button, Box, Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import RollCallListButton from "../../components/rollCallList/RollCallListButton.tsx";
 import RollCallListTypography from "../../components/rollCallList/RollCallListTypography.tsx";
 import RollCallListDynamicButton from "../../components/rollCallList/RollCallListDynamicButton.tsx";
 import RollCallListDatePicker from "../../components/rollCallList/RollCallListDatePicker.tsx";
-import { useNavigate } from "react-router-dom";
 
-const ButtonRow = ({ children }) => (
-    <Row justify="center" style={{ marginBottom: '10px' }}>
-        <Col>{children}</Col>
-    </Row>
+const ButtonRow = ({ children }: { children: React.ReactNode }) => (
+    <Grid container justifyContent="center" sx={{ marginBottom: '10px' }}>
+        <Grid item>{children}</Grid>
+    </Grid>
 );
 
 export default function RollCallListSelectScreen() {
@@ -18,6 +17,7 @@ export default function RollCallListSelectScreen() {
     const [modeIndex, setModeIndex] = useState<number | null>(null);
     const [sessionIndex, setSessionIndex] = useState<number | null>(null);
     const [datePicker, setDatePicker] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const mode = [
         { key: 1, modeName: '華語禮拜' },
@@ -49,12 +49,17 @@ export default function RollCallListSelectScreen() {
         if (datePicker && modeIndex && sessionIndex) {
             navigate('Worship', { state: { date: datePicker, modeIndex, mode } });
         } else {
-            message.error("請確保選擇了日期、聚會模式和聚會時間");
+            setErrorMessage("請確保選擇了日期、聚會模式和聚會時間");
         }
     };
 
     return (
         <>
+            {errorMessage && (
+                <Box sx={{ marginBottom: 2 }}>
+                    <Alert severity="error">{errorMessage}</Alert>
+                </Box>
+            )}
             <ButtonRow>
                 <RollCallListTypography titleName="點名日期" />
             </ButtonRow>
@@ -81,11 +86,11 @@ export default function RollCallListSelectScreen() {
                     universalIndex={sessionIndex} 
                 />
             </ButtonRow>
-            <Row justify="end">
-                <Col>
+            <Grid container justifyContent="flex-end">
+                <Grid item>
                     <RollCallListButton onClick={handleStartRollCall} actionName="開始點名" />
-                </Col>
-            </Row>
+                </Grid>
+            </Grid>
         </>
     );
 }

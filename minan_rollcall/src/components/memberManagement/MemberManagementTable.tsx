@@ -142,7 +142,6 @@ export default function MemberManagementTable(props: Props) {
         placeholder="搜尋會友"
         onChange={(e) => handleSearch(e.target.value)} // 即時更新
         value={searchText}
-        fullWidth
         margin="normal"
       />
       {/* 表格 */}

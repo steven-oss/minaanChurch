@@ -1,12 +1,11 @@
-import { Checkbox } from "antd";
+import { Checkbox } from "@mui/material";
 import React from "react";
 
-interface Props{
-    onChange:()=>void;
+interface Props {
+  onChange: () => void;
 }
-export default function RollCallListCheckbox(props:Props){
-    const {onChange}=props;
-    return(
-        <Checkbox onChange={onChange}/>
-    );
+
+export default function RollCallListCheckbox(props: Props) {
+  const { onChange } = props;
+  return <Checkbox onChange={onChange} />;
 }

@@ -1,16 +1,16 @@
-import { Typography } from "antd";
 import React from "react";
+import { Typography } from "@mui/material";
 
-interface Props{
-    titleName:string;
+interface Props {
+    titleName: string;
 }
-const { Title } = Typography;
 
-export default function RollCallListTypography(props:Props){
-    const {titleName} =props;
-    return(
-        <Typography>
-            <Title level={4}>{titleName}</Title>
+export default function RollCallListTypography(props: Props) {
+    const { titleName } = props;
+
+    return (
+        <Typography variant="h5">
+            {titleName}
         </Typography>
     );
 }
