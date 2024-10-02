@@ -13,12 +13,12 @@ const Apps = ({ children }: Props) => {
       <LayoutMenu />
 
       {/* Content Section */}
-      <Container sx={{ marginTop: 6, marginBottom: 6 }}>
+      <Container sx={{ my:2 }}>
         <Box
           sx={{
             backgroundColor: 'background.paper', // MUI color system
             minHeight: 280,
-            padding: 3,
+            padding: 2,
             borderRadius: 2,
             boxShadow: 1, // Optional for a slight shadow effect
           }}
@@ -32,7 +32,6 @@ const Apps = ({ children }: Props) => {
         component="footer"
         sx={{
           textAlign: 'center',
-          padding: 2,
           backgroundColor: 'background.default',
         }}
       >

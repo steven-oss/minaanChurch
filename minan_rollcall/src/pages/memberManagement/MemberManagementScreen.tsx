@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import MemberManagementTable from "../../components/memberManagement/MemberManagementTable.tsx";
-import { Col, Row } from "antd";
 import MemberManagementButton from "../../components/memberManagement/MemberManagementButton.tsx";
 import MemberManagementModal from "../../components/memberManagement/MemberManagementModal.tsx";
+import { Box } from "@mui/material";
   
 export default function MemberManagementScreen() {
 
@@ -27,11 +27,9 @@ export default function MemberManagementScreen() {
 
     return(
         <>
-         <Row justify="end" style={{ marginBottom: 16 }}>
-            <Col>
-              <MemberManagementButton actionName="新增會友" onClick={handleCreateButton} />
-            </Col>
-          </Row>
+        <Box display="flex" justifyContent="flex-end" >
+            <MemberManagementButton actionName="新增會友" onClick={handleCreateButton} color="primary"/>
+        </Box>
           <MemberManagementTable onEditButton={(key:number)=>handleEditButton(key)}/>
           <MemberManagementModal open={open} onCreateButtonCancel={handleCreateButtonCancel} selectedMember={selectedMember}/>
         </>

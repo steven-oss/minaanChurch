@@ -16,14 +16,6 @@ export default function MemberManagementModal(props: Props) {
     onCreateButtonCancel();
   };
 
-  const handleFormSubmit = (values: any) => {
-    console.log("Submitted values:", values);
-    // 在這裡可以添加任何需要的邏輯，比如 API 請求或狀態更新
-    // 例如，您可以在這裡將表單數據傳遞給父組件進行進一步處理
-    // onCreateButtonSave(values);
-    handleCancel(); // 提交後關閉對話框
-  };
-
   return (
     <Dialog open={open} onClose={handleCancel} fullWidth maxWidth="sm">
       <DialogTitle>
@@ -32,10 +24,10 @@ export default function MemberManagementModal(props: Props) {
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <MemberManagementForm selectedMember={selectedMember} onSubmit={handleFormSubmit} />
+        <MemberManagementForm selectedMember={selectedMember} />
       </DialogContent>
       <DialogActions>
-        <MemberManagementButton actionName={"取消"} onClick={handleCancel}/>
+        <MemberManagementButton actionName={"取消"} onClick={handleCancel} color="error"/>
       </DialogActions>
     </Dialog>
   );
