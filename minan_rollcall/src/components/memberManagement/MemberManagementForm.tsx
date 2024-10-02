@@ -1,162 +1,223 @@
-import { Button, Col, Form, FormProps, Input, Radio, Row, Select, Space } from "antd";
 import React, { useEffect } from "react";
-
-const { Option } = Select;
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  MenuItem,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  TextField,
+  Grid,
+} from "@mui/material";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 
 interface FieldType {
-  username?: string;
-  gender?: string;
-  isAdult?: boolean;
-  notes?: string;
-  phone?: string;
+  username: string;
+  gender: string;
+  isAdult: boolean;
+  notes: string;
+  phone: string;
+  address: {
+    city: string;
+    area: string;
+    street: string;
+  };
 }
 
 interface Props {
   selectedMember: any;
-  form:any;
+  onSubmit: (values: FieldType) => void; // 提交函數
 }
 
+const validationSchema = Yup.object({
+  username: Yup.string().required("姓名是必填的"),
+  gender: Yup.string().required("性別是必填的"),
+  isAdult: Yup.boolean().required("請選擇是否為成人"),
+  notes: Yup.string().required("請輸入標記(小筆記)"),
+  phone: Yup.string().required("請輸入電話號碼"),
+  address: Yup.object({
+    city: Yup.string().required("城市是必填的"),
+    area: Yup.string().required("區域是必填的"),
+    street: Yup.string().required("街道是必填的"),
+  }),
+});
+
 export default function MemberManagementForm(props: Props) {
-  const { selectedMember,form } = props;
-console.log(selectedMember)
-
-  useEffect(() => {
-    if (selectedMember) {
-      const [prefix, phoneNumber] = selectedMember.phone.split(' ');
-      form.setFieldsValue({
-        username: selectedMember.username,
-        gender: selectedMember.gender,
-        isAdult: selectedMember.isAdult ? true : false,
-        notes: selectedMember.notes,
-        prefix: prefix,
-        phone: phoneNumber,
-        address: selectedMember.address || {},
-      });
-    }else{
-        form.resetFields();
-    }
-  }, [selectedMember, form]);
-
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="886">+886</Option>
-      </Select>
-    </Form.Item>
-  );
+  const { selectedMember, onSubmit } = props;
 
   return (
-    <Form
-      form={form}
-      name="basic"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      style={{ maxWidth: 600, padding: '48px 0px' }}
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
+    <Formik
+      initialValues={{
+        username: "",
+        gender: "",
+        isAdult: true,
+        notes: "",
+        phone: "",
+        address: {
+          city: "",
+          area: "",
+          street: "",
+        },
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        console.log("Success:", values);
+        onSubmit(values); // 執行提交函數
+      }}
     >
-      <Form.Item<FieldType>
-        label="姓名"
-        name="username"
-        rules={[{ required: true, message: 'Please input your Username!' }]}
-        labelCol={{ span: 7 }}
-      >
-        <Input />
-      </Form.Item>
+      {({ values, handleChange, handleBlur }) => (
+        <Form style={{ maxWidth: 600, padding: "48px 0px" }}>
+          <FormControl fullWidth margin="normal">
+            <FormLabel>姓名</FormLabel>
+            <Field name="username">
+              {({ field, meta }) => (
+                <>
+                  <Input {...field} required />
+                  {meta.touched && meta.error ? (
+                    <div style={{ color: "red" }}>{meta.error}</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
+          </FormControl>
 
-      <Form.Item
-        label="性別"
-        name="gender"
-        rules={[{ required: true, message: 'Please select gender!' }]}
-        labelCol={{ span: 7 }}
-      >
-        <Select placeholder="select your gender">
-          <Option value="male">男</Option>
-          <Option value="female">女</Option>
-        </Select>
-      </Form.Item>
+          <FormControl fullWidth margin="normal">
+            <FormLabel>性別</FormLabel>
+            <Field name="gender">
+              {({ field, meta }) => (
+                <>
+                  <Select {...field} displayEmpty>
+                    <MenuItem value="">
+                      <em>選擇性別</em>
+                    </MenuItem>
+                    <MenuItem value="male">男</MenuItem>
+                    <MenuItem value="female">女</MenuItem>
+                  </Select>
+                  {meta.touched && meta.error ? (
+                    <div style={{ color: "red" }}>{meta.error}</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
+          </FormControl>
 
-      <Form.Item
-        label="是否為成人"
-        name="isAdult"
-        rules={[{ required: true, message: 'Please select your is AdultOrNot!' }]}
-        labelCol={{ span: 7 }}
-      >
-        <Radio.Group>
-          <Radio value={true}> 是 </Radio>
-          <Radio value={false}> 否 </Radio>
-        </Radio.Group>
-      </Form.Item>
-      <Form.Item 
-        label="地址"
-        labelCol={{ span: 7 }}
-        required
-        >
-       <Row gutter={8}>
-        <Col span={12}>
-        <Form.Item
-            name={['address', 'city']}
-            rules={[{ required: true, message: '城市是必填項' }]}
-        >
-            <Select placeholder="選擇城市" style={{ width: '100%' }}>
-            <Option value="NewTaipei">新北市</Option>
-            <Option value="Taoyuan">桃園市</Option>
-            </Select>
-        </Form.Item>
-        </Col>
-        <Col span={12}>
-        <Form.Item
-            name={['address', 'area']}
-            rules={[{ required: true, message: '區域是必填項' }]}
-        >
-            <Select placeholder="選擇區域" style={{ width: '100%' }}>
-            <Option value="Shulin">樹林區</Option>
-            <Option value="Sindrum">新莊區</Option>
-            </Select>
-        </Form.Item>
-        </Col>
-    </Row>
-    <Form.Item
-        name={['address', 'street']}
-        rules={[{ required: true, message: '街道是必填項' }]}
-    >
-        <Input placeholder="輸入街道名稱" />
-    </Form.Item>
-        </Form.Item>
-    
-      <Form.Item
-        name="notes"
-        label="標記(小筆記)"
-        rules={[{ required: true, message: 'Please input Notes' }]}
-        labelCol={{ span: 7 }}
-      >
-        <Input.TextArea showCount maxLength={100} />
-      </Form.Item>
+          <FormControl component="fieldset" margin="normal">
+            <FormLabel component="legend">是否為成人</FormLabel>
+            <Field name="isAdult">
+              {({ field, meta }) => (
+                <RadioGroup {...field}>
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="是"
+                  />
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="否"
+                  />
+                  {meta.touched && meta.error ? (
+                    <div style={{ color: "red" }}>{meta.error}</div>
+                  ) : null}
+                </RadioGroup>
+              )}
+            </Field>
+          </FormControl>
 
-      <Form.Item
-        name="phone"
-        label="電話"
-        rules={[{ required: true, message: 'Please input your phone number!' }]}
-        labelCol={{ span: 7 }}
-      >
-        <Input addonBefore={prefixSelector} />
-      </Form.Item>
+          <FormControl fullWidth margin="normal">
+            <FormLabel>地址</FormLabel>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Field name="address.city">
+                  {({ field, meta }) => (
+                    <>
+                      <Select {...field} displayEmpty>
+                        <MenuItem value="">
+                          <em>選擇城市</em>
+                        </MenuItem>
+                        <MenuItem value="NewTaipei">新北市</MenuItem>
+                        <MenuItem value="Taoyuan">桃園市</MenuItem>
+                      </Select>
+                      {meta.touched && meta.error ? (
+                        <div style={{ color: "red" }}>{meta.error}</div>
+                      ) : null}
+                    </>
+                  )}
+                </Field>
+              </Grid>
+              <Grid item xs={6}>
+                <Field name="address.area">
+                  {({ field, meta }) => (
+                    <>
+                      <Select {...field} displayEmpty>
+                        <MenuItem value="">
+                          <em>選擇區域</em>
+                        </MenuItem>
+                        <MenuItem value="Shulin">樹林區</MenuItem>
+                        <MenuItem value="Sindrum">新莊區</MenuItem>
+                      </Select>
+                      {meta.touched && meta.error ? (
+                        <div style={{ color: "red" }}>{meta.error}</div>
+                      ) : null}
+                    </>
+                  )}
+                </Field>
+              </Grid>
+            </Grid>
+            <Field name="address.street">
+              {({ field, meta }) => (
+                <>
+                  <Input {...field} placeholder="輸入街道名稱" />
+                  {meta.touched && meta.error ? (
+                    <div style={{ color: "red" }}>{meta.error}</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
+          </FormControl>
 
-      <Form.Item style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button type="primary" htmlType="submit">
-          送出
-        </Button>
-      </Form.Item>
-    </Form>
+          <FormControl fullWidth margin="normal">
+            <FormLabel>標記(小筆記)</FormLabel>
+            <Field name="notes">
+              {({ field, meta }) => (
+                <>
+                  <TextField {...field} multiline rows={4} />
+                  {meta.touched && meta.error ? (
+                    <div style={{ color: "red" }}>{meta.error}</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
+          </FormControl>
+
+          <FormControl fullWidth margin="normal">
+            <FormLabel>電話</FormLabel>
+            <Field name="phone">
+              {({ field, meta }) => (
+                <>
+                  <Input {...field} />
+                  {meta.touched && meta.error ? (
+                    <div style={{ color: "red" }}>{meta.error}</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
+          </FormControl>
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ display: "flex", margin: "0 auto" }}
+          >
+            送出
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 }

@@ -42,7 +42,7 @@ export default function LayoutMenu() {
     return (
         <AppBar position="static" sx={{ backgroundColor: '#000000' }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <LayoutTypography text={"民安教會後台管理"} variant={"h4"} sx={{ color: '#ffffff', margin: '16px 0' }}/>
+                <LayoutTypography text={"民安教會後台管理"} variant={'h4'} />
                 <Box>
                     <Tabs
                         sx={{color:"#ffffff"}}

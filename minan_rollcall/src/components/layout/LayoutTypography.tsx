@@ -15,6 +15,7 @@ export default function LayoutTypography(props:Props) {
                 variant={variant} // Equivalent to AntD's Title
                 sx={sx}
                 color={color}
+                component={'span'} 
             >
                 {text}
             </Typography>
