@@ -1,40 +1,44 @@
 import React from 'react';
-import { Layout, theme } from 'antd';
+import { AppBar, Toolbar, Container, Box, Typography } from '@mui/material';
 import LayoutTypography from '../../components/layout/LayoutTypography.tsx';
 import LayoutMenu from '../../components/layout/LayoutMenu.tsx';
 
-interface Props{
+interface Props {
   children: React.ReactNode;
 }
-const { Header, Content, Footer } = Layout;
 
-const Apps = ({children}:Props) => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
+const Apps = ({ children }: Props) => {
   return (
-    <Layout>
-      <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <LayoutTypography/>
-        <LayoutMenu/>
-      </Header>
-      <Content style={{ margin: '48px 0',padding: '0 48px' }}>
-        <div
-          style={{
-            background: colorBgContainer,
+    <>
+      <LayoutMenu />
+
+      {/* Content Section */}
+      <Container sx={{ marginTop: 6, marginBottom: 6 }}>
+        <Box
+          sx={{
+            backgroundColor: 'background.paper', // MUI color system
             minHeight: 280,
-            padding: 24,
-            borderRadius: borderRadiusLG,
+            padding: 3,
+            borderRadius: 2,
+            boxShadow: 1, // Optional for a slight shadow effect
           }}
         >
           {children}
-        </div>
-      </Content>
-      <Footer style={{ textAlign: 'center' }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
-      </Footer>
-    </Layout>
+        </Box>
+      </Container>
+
+      {/* Footer */}
+      <Box
+        component="footer"
+        sx={{
+          textAlign: 'center',
+          padding: 2,
+          backgroundColor: 'background.default',
+        }}
+      >
+        <LayoutTypography color={"text.secondary"} variant={"body2"} text={`Material-UI ©${new Date().getFullYear()}`}/>
+      </Box>
+    </>
   );
 };
 

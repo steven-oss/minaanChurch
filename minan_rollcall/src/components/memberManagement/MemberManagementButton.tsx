@@ -1,13 +1,16 @@
-import { Button } from "antd";
-import React, { useState } from "react";
+import { Button } from "@mui/material";
+import React from "react";
 
-interface Props{
-    actionName:string;
-    onClick:()=>void;
+interface Props {
+    actionName: string;
+    onClick: () => void;
 }
-export default function MemberManagementButton(props:Props){
-    const {actionName,onClick} = props;
-    return(
-        <Button type="primary" onClick={onClick}>{actionName}</Button>
-    )
+
+export default function MemberManagementButton(props: Props) {
+    const { actionName, onClick } = props;
+    return (
+        <Button variant="contained" color="primary" onClick={onClick}>
+            {actionName}
+        </Button>
+    );
 }

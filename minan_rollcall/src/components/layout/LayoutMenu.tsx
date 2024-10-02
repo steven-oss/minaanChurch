@@ -1,6 +1,7 @@
-import { Menu, MenuProps } from "antd";
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Tabs, Tab, AppBar, Box, Toolbar } from "@mui/material";
+import LayoutTypography from "./LayoutTypography.tsx";
 
 export default function LayoutMenu() {
     const navigate = useNavigate();
@@ -8,34 +9,29 @@ export default function LayoutMenu() {
 
     const labels = ['點名表', '人數統計表', '會友管理'];
 
-    const items1: MenuProps['items'] = labels.map((label, index) => ({
-        key: `${index + 1}`,
-        label,
-    }));
-
-    // Determine the default selected key based on the current path
-    const getDefaultSelectedKey = () => {
+    // Determine the default selected tab based on the current path
+    const getDefaultSelectedTab = () => {
         switch (location.pathname) {
             case '/RollCallListSelectScreen':
-                return '1';
-            case '/attendance-statistics': // Update with the correct path
-                return '2';
+                return 0;
+            case '/attendance-statistics':
+                return 1;
             case '/MemberManagement':
-                return '3';
+                return 2;
             default:
-                return '1'; // Default to the first item or whatever you prefer
+                return 2; // Default to the first item
         }
     };
 
-    const handleMenuClick = (key: string) => {
-        switch (key) {
-            case '1':
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+        switch (newValue) {
+            case 0:
                 navigate('/RollCallListSelectScreen');
                 break;
-            case '2':
-                navigate('/attendance-statistics'); // Adjust the path as needed
+            case 1:
+                navigate('/attendance-statistics');
                 break;
-            case '3':
+            case 2:
                 navigate('/MemberManagement');
                 break;
             default:
@@ -44,13 +40,21 @@ export default function LayoutMenu() {
     };
 
     return (
-        <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={[getDefaultSelectedKey()]} // Use dynamic selected key
-            items={items1}
-            onClick={({ key }) => handleMenuClick(key)} // Handle menu item click
-            style={{ flex: 1, minWidth: 0, justifyContent: 'flex-end' }}
-        />
+        <AppBar position="static" sx={{ backgroundColor: '#000000' }}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <LayoutTypography text={"民安教會後台管理"} variant={"h4"} sx={{ color: '#ffffff', margin: '16px 0' }}/>
+                <Box>
+                    <Tabs
+                        sx={{color:"#ffffff"}}
+                        value={getDefaultSelectedTab()} // Use dynamic selected tab
+                        onChange={handleTabChange} // Handle tab change
+                    >
+                        {labels.map((label, index) => (
+                            <Tab key={index} label={label} sx={{ color: "#ffffff", '&.Mui-selected': { color: '#ffffff' }, '&.Mui-focusVisible': { outline: 'none' } }} />
+                        ))}
+                    </Tabs>
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 }
