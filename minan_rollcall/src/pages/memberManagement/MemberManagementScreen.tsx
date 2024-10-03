@@ -22,6 +22,7 @@ export default function MemberManagementScreen() {
     const [selectedMember, setSelectedMember] = useState<any>(null); 
     const [searchText, setSearchText] = useState(''); // 存儲搜尋文字
     const [filteredData, setFilteredData] = useState<DataType[]>([]); // 存儲篩選後的數據
+    const [page, setPage] = useState(0); // Current page state
 
     const handleCreateButton = ()=>{
       setOpen(true);
@@ -47,6 +48,7 @@ export default function MemberManagementScreen() {
         )
       );
       setFilteredData(filtered); // 更新篩選後的數據
+      setPage(0);
     };
 
     const data: DataType[] = [
@@ -117,7 +119,7 @@ export default function MemberManagementScreen() {
             <MemberManagementButton actionName="新增會友" onClick={handleCreateButton} color="primary"/>
             </Grid>
         </Grid>
-          <MemberManagementTable onEditButton={(key:number)=>handleEditButton(key)} data={data} searchText={searchText} filteredData={filteredData}/>
+          <MemberManagementTable onEditButton={(key:number)=>handleEditButton(key)} data={data} searchText={searchText} filteredData={filteredData} setPage={setPage} page={page}/>
           <MemberManagementModal open={open} onCreateButtonCancel={handleCreateButtonCancel} selectedMember={selectedMember}/>
         </>
     )

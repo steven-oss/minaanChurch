@@ -1,30 +1,26 @@
 import React, { useState } from 'react';
-import { Table, TableHead, TableBody, TableRow, TableCell, TextField, Box, TablePagination } from '@mui/material';
+import { Table, TableHead, TableBody, TableRow, TableCell, Box, TablePagination } from '@mui/material';
 import MemberManagementButton from './MemberManagementButton.tsx';
 import { DataType } from '../../pages/memberManagement/MemberManagementScreen.tsx';
 
-
-
 interface Column {
   title: string;
-  dataIndex?: keyof DataType; // 使用 keyof DataType 確保 dataIndex 是有效的屬性
-  render?: (record: DataType) => React.ReactNode; // render 函數，只接受 record 作為參數
+  dataIndex?: keyof DataType;
+  render?: (record: DataType) => React.ReactNode;
 }
 
 interface Props {
   onEditButton: (key: number) => void;
-  searchText:string;
-  filteredData:DataType[];
-  data:DataType[];
+  searchText: string;
+  filteredData: DataType[];
+  data: DataType[];
+  setPage: (page: number) => void;
+  page: number;
 }
 
 export default function MemberManagementTable(props: Props) {
-  const { onEditButton,searchText,filteredData,data } = props;
-  const [page, setPage] = useState(0); // 當前頁碼
-  const [rowsPerPage, setRowsPerPage] = useState(5); // 每頁顯示的行數
-
-  // 原始數據
-  
+  const { onEditButton, searchText, filteredData, data, setPage, page } = props;
+  const [rowsPerPage, setRowsPerPage] = useState(5); 
 
   // 表格的列定義
   const columns: Column[] = [
@@ -35,7 +31,10 @@ export default function MemberManagementTable(props: Props) {
       render: (record: DataType) => (record.isAdult ? '是' : '否') 
     },
     { title: '標記(小筆記)', dataIndex: 'notes' },
-    { title: '住址', dataIndex: 'address' },
+    { 
+      title: '住址', 
+      render: (record: DataType) => (typeof record.address === 'string' ? record.address : '地址格式錯誤') 
+    }, // 渲染地址，如果地址是字符串
     { title: '電話', dataIndex: 'phone' },
     { 
       title: '會友編輯', 
@@ -53,7 +52,7 @@ export default function MemberManagementTable(props: Props) {
   // 行數變更處理
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // 重置頁碼
+    setPage(0);
   };
 
   // 計算要顯示的數據
@@ -61,8 +60,7 @@ export default function MemberManagementTable(props: Props) {
   const paginatedData = currentData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
-    <Box>      
-      {/* 表格 */}
+    <Box>
       <Table>
         <TableHead>
           <TableRow>
@@ -76,22 +74,29 @@ export default function MemberManagementTable(props: Props) {
             <TableRow key={record.key}>
               {columns.map((column, index) => (
                 <TableCell key={index}>
-                  {column.render ? column.render(record) : record[column.dataIndex!]}
+                  {column.render ? column.render(record) : record[column.dataIndex as keyof DataType]}
                 </TableCell>
               ))}
             </TableRow>
           ))}
+          {paginatedData.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={columns.length} align="center">
+                沒有找到匹配的數據
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
-      {/* 分頁組件 */}
+
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={currentData.length} // 總行數
-        rowsPerPage={rowsPerPage} // 每頁顯示的行數
-        page={page} // 當前頁碼
-        onPageChange={handleChangePage} // 當前頁碼改變的處理函數
-        onRowsPerPageChange={handleChangeRowsPerPage} // 每頁行數改變的處理函數
+        count={currentData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Box>
   );
