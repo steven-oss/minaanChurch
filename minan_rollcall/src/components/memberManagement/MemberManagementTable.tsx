@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
 import { Table, TableHead, TableBody, TableRow, TableCell, TextField, Box, TablePagination } from '@mui/material';
 import MemberManagementButton from './MemberManagementButton.tsx';
+import { DataType } from '../../pages/memberManagement/MemberManagementScreen.tsx';
 
-interface DataType {
-  key: number;
-  name: string;
-  sex: string;
-  isAdult: boolean;
-  notes: string;
-  address: string;
-  phone: string;
-}
+
 
 interface Column {
   title: string;
@@ -20,73 +13,18 @@ interface Column {
 
 interface Props {
   onEditButton: (key: number) => void;
+  searchText:string;
+  filteredData:DataType[];
+  data:DataType[];
 }
 
 export default function MemberManagementTable(props: Props) {
-  const { onEditButton } = props;
-  const [searchText, setSearchText] = useState(''); // 存儲搜尋文字
-  const [filteredData, setFilteredData] = useState<DataType[]>([]); // 存儲篩選後的數據
+  const { onEditButton,searchText,filteredData,data } = props;
   const [page, setPage] = useState(0); // 當前頁碼
   const [rowsPerPage, setRowsPerPage] = useState(5); // 每頁顯示的行數
 
   // 原始數據
-  const data: DataType[] = [
-    {
-      key: 1,
-      name: '魏榮光',
-      sex: '男',
-      isAdult: true,
-      notes: '牧師',
-      address: '新北市',
-      phone: '123456789',
-    },
-    {
-      key: 2,
-      name: '李孟芹',
-      sex: '女',
-      isAdult: true,
-      notes: '師母',
-      address: '新北市',
-      phone: '123456789',
-    },
-    {
-      key: 3,
-      name: '魏蘿苡',
-      sex: '女',
-      isAdult: false,
-      notes: '牧師的女兒',
-      address: '新北市',
-      phone: '123456789',
-    },
-    // 更多數據
-    {
-      key: 4,
-      name: '陳明',
-      sex: '男',
-      isAdult: true,
-      notes: '朋友',
-      address: '新北市',
-      phone: '987654321',
-    },
-    {
-      key: 5,
-      name: '張小雅',
-      sex: '女',
-      isAdult: false,
-      notes: '學生',
-      address: '新北市',
-      phone: '123456789',
-    },
-    {
-      key: 6,
-      name: '王大明',
-      sex: '男',
-      isAdult: true,
-      notes: '同事',
-      address: '新北市',
-      phone: '123456789',
-    },
-  ];
+  
 
   // 表格的列定義
   const columns: Column[] = [
@@ -107,18 +45,6 @@ export default function MemberManagementTable(props: Props) {
     },
   ];
 
-  // 當輸入框改變時觸發的函數
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-
-    const filtered = data.filter((item) =>
-      Object.keys(item).some((key) =>
-        String(item[key as keyof DataType]).toLowerCase().includes(value.toLowerCase())
-      )
-    );
-    setFilteredData(filtered); // 更新篩選後的數據
-  };
-
   // 分頁變更處理
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -135,15 +61,7 @@ export default function MemberManagementTable(props: Props) {
   const paginatedData = currentData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
-    <Box>
-      {/* 搜索框 */}
-      <TextField
-        variant="outlined"
-        placeholder="搜尋會友"
-        onChange={(e) => handleSearch(e.target.value)} // 即時更新
-        value={searchText}
-        margin="normal"
-      />
+    <Box>      
       {/* 表格 */}
       <Table>
         <TableHead>

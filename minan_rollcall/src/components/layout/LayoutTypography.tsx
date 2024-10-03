@@ -10,7 +10,6 @@ interface Props{
 export default function LayoutTypography(props:Props) {
     const {text,variant,sx,color} = props;
     return (
-        <Typography>
             <Typography
                 variant={variant} // Equivalent to AntD's Title
                 sx={sx}
@@ -19,6 +18,5 @@ export default function LayoutTypography(props:Props) {
             >
                 {text}
             </Typography>
-        </Typography>
     );
 }
