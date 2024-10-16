@@ -12,7 +12,7 @@ export default function LayoutMenu() {
     // Determine the default selected tab based on the current path
     const getDefaultSelectedTab = () => {
         switch (location.pathname) {
-            case '/RollCallListSelectScreen':
+            case '/RollCallListSelectScreen/Worship':
                 return 0;
             case '/attendance-statistics':
                 return 1;
@@ -26,7 +26,7 @@ export default function LayoutMenu() {
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         switch (newValue) {
             case 0:
-                navigate('/RollCallListSelectScreen');
+                navigate('/RollCallListSelectScreen/Worship');
                 break;
             case 1:
                 navigate('/attendance-statistics');

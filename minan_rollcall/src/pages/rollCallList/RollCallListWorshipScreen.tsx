@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import RollCallListTypography from "../../components/rollCallList/RollCallListTypography.tsx";
@@ -18,25 +18,26 @@ export default function RollCallListWorshipScreen() {
     const navigate = useNavigate();
 
     const { date, modeIndex, mode } = location.state || {};
-    const dateChange = moment(date.$d);
-    console.log(modeIndex);
+    // const dateChange = moment(date.$d);
+    // console.log(modeIndex);
     const [searchText, setSearchText] = useState(''); // Store search text
     const [filteredData, setFilteredData] = useState<DataType[]>([]); // Store filtered data
     const [page, setPage] = useState(0); // Current page state
+    const [nextSunday, setNextSunday] = useState('');
 
     // Convert to yyyy-mm-dd format
-    const formattedDate = dateChange.format('YYYY-MM-DD');
+    // const formattedDate = dateChange.format('YYYY-MM-DD');
 
-    const selectedMode = mode.find(item => item.key === modeIndex);
-    const modeName = selectedMode ? selectedMode.modeName : 'Unknown Mode';
+    // const selectedMode = mode.find(item => item.key === modeIndex);
+    // const modeName = selectedMode ? selectedMode.modeName : 'Unknown Mode';
     
     const handleOnchangeCheck = (key: number) => {
-        console.log(key);
+        console.log(key,nextSunday);
     };
 
-    const handleBackPage = () => {
-        navigate(-1);
-    };
+    // const handleBackPage = () => {
+    //     navigate(-1);
+    // };
 
       // Handle search input change
   const handleSearch = (value: string) => {
@@ -62,20 +63,30 @@ export default function RollCallListWorshipScreen() {
         // Add more data as needed for pagination
       ];
 
+      useEffect(()=>{
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 取得今天是星期幾 (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    
+        const daysUntilNextSunday = (7 - dayOfWeek) % 7 || 7; // 確保結果為正數
+        const nextSunday = new Date(today);
+        nextSunday.setDate(today.getDate() + daysUntilNextSunday);
+        const getLastSunday = nextSunday.toLocaleDateString();
+        setNextSunday(getLastSunday)
+      })
     return (
         <>
             <Grid container justifyContent="center">
                 <Grid item>
-                    <RollCallListTypography titleName={`${formattedDate} ${modeName} 點名表`} />
+                    <RollCallListTypography titleName={`${nextSunday} 點名表`} />
                 </Grid>
             </Grid>
             <Grid container spacing={2} alignItems="center" sx={{ mb: 1 }}>
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <RollCallListSearch onSearch={(value:string)=>handleSearch(value)} searchText={searchText}/>
                 </Grid>
-                <Grid item xs={6} textAlign={'right'}>
+                {/* <Grid item xs={6} textAlign={'right'}>
                     <RollCallListButton actionName="返回" onClick={handleBackPage}/>
-                </Grid>
+                </Grid> */}
             </Grid>
             <RollCallListTable onChangeCheck={handleOnchangeCheck} searchText={searchText} filteredData={filteredData} setPage={setPage} page={page} data={data}/>
         </>

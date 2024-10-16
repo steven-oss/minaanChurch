@@ -20,11 +20,12 @@ interface FieldType {
   isAdult?: boolean;
   notes?: string;
   phone?: string;
-  address?: {
-    city?: string;
-    area?: string;
-    street?: string;
-  };
+  street?: string;
+  // address?: {
+  //   city?: string;
+  //   area?: string;
+  //   street?: string;
+  // };
 }
 
 interface Props {
@@ -34,7 +35,7 @@ interface Props {
 export default function MemberManagementForm(props: Props) {
   const { selectedMember } = props;
   const { control, handleSubmit, reset, formState: { errors } } = useForm<FieldType>();
-console.log(control,errors )
+// console.log(control,errors )
   useEffect(() => {
     if (selectedMember) {
       const [prefix, phoneNumber] = selectedMember.phone.split(" ");
@@ -44,11 +45,12 @@ console.log(control,errors )
         isAdult: selectedMember.isAdult ? true : false,
         notes: selectedMember.notes,
         phone: phoneNumber,
-        address: {
-          city: selectedMember.address?.city || '',
-          area: selectedMember.address?.area || '',
-          street: selectedMember.address?.street || '',
-        },
+        street: selectedMember.address?.street || '',
+        // address: {
+        //   city: selectedMember.address?.city || '',
+        //   area: selectedMember.address?.area || '',
+        //   street: selectedMember.address?.street || '',
+        // },
       });
     } else {
       reset();
@@ -60,7 +62,7 @@ console.log(control,errors )
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: 600, padding: '48px 0px' }}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: 600, padding: '12px 0px' }}>
       <FormControl fullWidth margin="normal">
         <FormLabel>姓名</FormLabel>
         <Controller
@@ -114,7 +116,7 @@ console.log(control,errors )
         />
       </FormControl>
 
-      <FormControl fullWidth margin="normal">
+      {/* <FormControl fullWidth margin="normal">
         <FormLabel>縣市</FormLabel>
         <Controller
           name="address.city"
@@ -156,19 +158,19 @@ console.log(control,errors )
             </>
           )}
         />
-      </FormControl>
+      </FormControl> */}
 
       <FormControl fullWidth margin="normal">
         <FormLabel>地址</FormLabel>
         <Controller
-          name="address.street"
+          name="street"
           control={control}
           defaultValue=""
-          rules={{ required: "地址名稱是必填的" }}
+          // rules={{ required: "地址名稱是必填的" }}
           render={({ field }) => (
             <>
               <Input {...field} placeholder="輸入地址名稱" />
-              {errors.address?.street && <span style={{ color: 'red' }}>{errors.address.street.message}</span>}
+              {/* {errors.address?.street && <span style={{ color: 'red' }}>{errors.address.street.message}</span>} */}
             </>
           )}
         />
