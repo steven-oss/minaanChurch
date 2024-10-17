@@ -86,7 +86,10 @@ export default function RollCallListSelectScreen() {
                     universalIndex={sessionIndex} 
                 />
             </ButtonRow> */}
-            <Grid container justifyContent="center">
+            <Grid container spacing={2} justifyContent="center">
+                <Grid item>
+                    <RollCallListButton onClick={handleStartRollCall} actionName="建立點名表" />
+                </Grid>
                 <Grid item>
                     <RollCallListButton onClick={handleStartRollCall} actionName="開始點名" />
                 </Grid>
