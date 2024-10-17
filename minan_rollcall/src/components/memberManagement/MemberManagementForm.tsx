@@ -92,8 +92,8 @@ export default function MemberManagementForm(props: Props) {
                 <MenuItem value="">
                   <em>選擇性別</em>
                 </MenuItem>
-                <MenuItem value="male">男</MenuItem>
-                <MenuItem value="female">女</MenuItem>
+                <MenuItem value={1}>男</MenuItem>
+                <MenuItem value={2}>女</MenuItem>
               </Select>
               {errors.gender && <span style={{ color: 'red' }}>{errors.gender.message}</span>}
             </>

@@ -46,10 +46,10 @@ export default function RollCallListSelectScreen() {
     };
 
     const handleStartRollCall = () => {
-        if (datePicker && modeIndex && sessionIndex) {
-            navigate('Worship', { state: { date: datePicker, modeIndex, mode } });
+        if (datePicker) {
+            navigate('Worship', { state: { date: datePicker } });
         } else {
-            setErrorMessage("請確保選擇了日期、聚會模式和聚會時間");
+            setErrorMessage("請確保選擇了日期");
         }
     };
 
@@ -66,7 +66,7 @@ export default function RollCallListSelectScreen() {
             <ButtonRow>
                 <RollCallListDatePicker onChange={handleDatePickerChange} />
             </ButtonRow>
-            <ButtonRow>
+            {/* <ButtonRow>
                 <RollCallListTypography titleName="聚會模式" />
             </ButtonRow>
             <ButtonRow>
@@ -85,8 +85,8 @@ export default function RollCallListSelectScreen() {
                     onClick={handleSessionButtonClick} 
                     universalIndex={sessionIndex} 
                 />
-            </ButtonRow>
-            <Grid container justifyContent="flex-end">
+            </ButtonRow> */}
+            <Grid container justifyContent="center">
                 <Grid item>
                     <RollCallListButton onClick={handleStartRollCall} actionName="開始點名" />
                 </Grid>

@@ -17,12 +17,18 @@ export default function RollCallListDatePicker(props: Props) {
     }
   };
 
+  // 仅允许选择周日
+  const shouldDisableDate = (date: Dayjs) => {
+    return date.day() !== 0; // 0 表示周日
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         format="YYYY-MM-DD"
         onChange={handleDateChange}
         slotProps={{ textField: { fullWidth: true } }}
+        shouldDisableDate={shouldDisableDate} // 添加这个属性
       />
     </LocalizationProvider>
   );
