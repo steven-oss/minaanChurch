@@ -13,6 +13,7 @@ import {
   Grid,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
+import { GenderType } from "../../pages/memberManagement/MemberManagementScreen";
 
 interface FieldType {
   username?: string;
@@ -30,10 +31,11 @@ interface FieldType {
 
 interface Props {
   selectedMember: any;
+  genderData:GenderType|null;
 }
 
 export default function MemberManagementForm(props: Props) {
-  const { selectedMember } = props;
+  const { selectedMember,genderData } = props;
   const { control, handleSubmit, reset, formState: { errors } } = useForm<FieldType>();
 // console.log(control,errors )
   useEffect(() => {
@@ -92,8 +94,11 @@ export default function MemberManagementForm(props: Props) {
                 <MenuItem value="">
                   <em>選擇性別</em>
                 </MenuItem>
-                <MenuItem value={1}>男</MenuItem>
-                <MenuItem value={2}>女</MenuItem>
+                {
+                  genderData?.data.map((gender)=>(
+                    <MenuItem key={gender.id} value={gender.id}>{gender.gender}</MenuItem>
+                  ))
+                }
               </Select>
               {errors.gender && <span style={{ color: 'red' }}>{errors.gender.message}</span>}
             </>

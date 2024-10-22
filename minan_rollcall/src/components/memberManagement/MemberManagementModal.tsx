@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
 import MemberManagementForm from "./MemberManagementForm.tsx";
 import MemberManagementButton from "./MemberManagementButton.tsx";
+import { GenderType } from "../../pages/memberManagement/MemberManagementScreen.tsx";
 
 interface Props {
   open: boolean;
   onCreateButtonCancel: () => void;
   selectedMember: any;
+  genderData:GenderType|null;
 }
 
 export default function MemberManagementModal(props: Props) {
-  const { open, selectedMember, onCreateButtonCancel } = props;
-
+  const { open, selectedMember, onCreateButtonCancel,genderData } = props;
+  
   const handleCancel = () => {
     onCreateButtonCancel();
   };
@@ -24,7 +26,7 @@ export default function MemberManagementModal(props: Props) {
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <MemberManagementForm selectedMember={selectedMember} />
+        <MemberManagementForm selectedMember={selectedMember} genderData={genderData}/>
       </DialogContent>
       <DialogActions>
         <MemberManagementButton actionName={"取消"} onClick={handleCancel} color="error"/>

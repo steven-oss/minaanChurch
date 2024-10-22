@@ -23,7 +23,6 @@ export default function RollCallListWorshipScreen() {
     const [searchText, setSearchText] = useState(''); // Store search text
     const [filteredData, setFilteredData] = useState<DataType[]>([]); // Store filtered data
     const [page, setPage] = useState(0); // Current page state
-    const [nextSunday, setNextSunday] = useState('');
 
     // Convert to yyyy-mm-dd format
     // const formattedDate = dateChange.format('YYYY-MM-DD');
@@ -32,7 +31,7 @@ export default function RollCallListWorshipScreen() {
     // const modeName = selectedMode ? selectedMode.modeName : 'Unknown Mode';
     
     const handleOnchangeCheck = (key: number) => {
-        console.log(key,nextSunday);
+        console.log(key);
     };
 
     const handleBackPage = () => {
