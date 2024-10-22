@@ -17,12 +17,12 @@ interface Props {
   setPage: (page: number) => void;
   page: number;
   pagination:DataPagination;
+  rowsPerPage:number;
+  setRowsPerPage: (page: number) => void;
 }
 
 export default function MemberManagementTable(props: Props) {
-  const { onEditButton, searchText, data, setPage, page,pagination } = props;
-  const [rowsPerPage, setRowsPerPage] = useState(5); 
-
+  const { onEditButton, searchText, data, setPage, page,pagination,rowsPerPage,setRowsPerPage } = props;
   // 表格的列定義
   const columns: Column[] = [
     { title: '姓名', dataIndex: 'username' },
@@ -47,7 +47,6 @@ export default function MemberManagementTable(props: Props) {
 
   // 分頁變更處理
   const handleChangePage = (event: unknown, newPage: number) => {
-    console.log(newPage)
     setPage(newPage);
   };
 
@@ -56,7 +55,7 @@ export default function MemberManagementTable(props: Props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-console.log(data)
+// console.log(data)
   // 計算要顯示的數據
   // const currentData = searchText ? data : data;
   // const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);

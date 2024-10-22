@@ -43,9 +43,7 @@ export default function MemberManagementScreen() {
     const [open,setOpen] = useState<boolean>(false)
     const [selectedMember, setSelectedMember] = useState<any>(null); 
     const [searchText, setSearchText] = useState(''); // 存儲搜尋文字
-    // const [filteredData, setFilteredData] = useState<DataType[]>([]); // 存儲篩選後的數據
     const [page, setPage] = useState(0); // Current page state
-    const pageSize = 5;
     const [membersData, setMembersData] = useState<DataType[]>([]);
     const [pagination,setPagination] = useState<DataPagination>({
       currentPage:1,
@@ -53,20 +51,19 @@ export default function MemberManagementScreen() {
       totalMembers:1,
       totalPages:1
     })
-
+    const [rowsPerPage, setRowsPerPage] = useState(5); 
     const { data: genderData, loading, error } = useApi(fetchGenderData);
 
+    const fetchData = async (currentPage: number,rowsPerPage:number) => {
+      const result = await fetchMembers(currentPage + 1, rowsPerPage);
+      setPagination(result.pagination);
+      setMembersData(result.data); // Assuming result is of type DataType[]
+    };
+  
+    // 修改 useEffect 使其依賴 page 變化
     useEffect(() => {
-      const fetchData = async () => {
-        console.log(page,pageSize)
-          const result = await fetchMembers(page, pageSize);
-          console.log(result)
-          setPagination(result.pagination);
-          setMembersData(result.data); // Assuming result is of type DataType[]
-      };
-
-      fetchData();
-    }, []);
+      fetchData(page,rowsPerPage); // Fetch based on the updated page
+    }, [page,rowsPerPage]); // 每次 page 改變都觸發
 
     const handleCreateButton = ()=>{
       setOpen(true);
@@ -97,7 +94,7 @@ export default function MemberManagementScreen() {
             <MemberManagementButton actionName="新增會友" onClick={handleCreateButton} color="primary"/>
             </Grid>
         </Grid>
-          <MemberManagementTable onEditButton={handleEditButton} data={membersData} searchText={searchText} setPage={setPage} page={page} pagination={pagination}/>
+          <MemberManagementTable onEditButton={handleEditButton} data={membersData} searchText={searchText} setPage={setPage} page={page} pagination={pagination} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}/>
           <MemberManagementModal open={open} onCreateButtonCancel={handleCreateButtonCancel} selectedMember={selectedMember} genderData={genderData}/>
         </>
     )
