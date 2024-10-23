@@ -95,7 +95,7 @@ export default function MemberManagementTable(props: Props) {
         component="div"
         count={pagination.totalMembers}
         rowsPerPage={rowsPerPage}
-        page={page}
+        page={pagination.totalMembers > 0 ? page : 0} // 確保當沒有成員時，頁數設為 0
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

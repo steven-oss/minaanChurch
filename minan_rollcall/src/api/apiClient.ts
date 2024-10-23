@@ -5,7 +5,8 @@ const apiClient = async <T>(config: AxiosRequestConfig): Promise<T> => {
     const response = await axios(config);
     return response.data;
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : 'Error in API request');
+    console.log(error)
+    return error.response.data;
   }
 };
 

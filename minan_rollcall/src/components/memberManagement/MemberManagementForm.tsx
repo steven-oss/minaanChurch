@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -11,9 +11,12 @@ import {
   Radio,
   TextField,
   Grid,
+  Alert,
+  Box,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import { GenderType } from "../../pages/memberManagement/MemberManagementScreen";
+import { DataPagination, GenderType } from "../../pages/memberManagement/MemberManagementScreen";
+import { fetchMembers, postMembers, putMembers } from "../../api/membersApi.ts";
 
 interface FieldType {
   username?: string;
@@ -32,22 +35,27 @@ interface FieldType {
 interface Props {
   selectedMember: any;
   genderData:GenderType|null;
+  setErrorMessage:(errorMessage:string)=>void;
+  onCancel:()=>void;
+  pagination:DataPagination;
+  rowsPerPage:number;
+  setMembersData:(data:any)=>void;
+  setPagination:(page:DataPagination)=>void;
 }
 
 export default function MemberManagementForm(props: Props) {
-  const { selectedMember,genderData } = props;
+  const { selectedMember,genderData,setErrorMessage,onCancel,pagination,rowsPerPage,setMembersData,setPagination } = props;
   const { control, handleSubmit, reset, formState: { errors } } = useForm<FieldType>();
 // console.log(control,errors )
   useEffect(() => {
     if (selectedMember) {
-      const [prefix, phoneNumber] = selectedMember.phone.split(" ");
       reset({
         username: selectedMember.username,
         gender: selectedMember.gender,
         isAdult: selectedMember.isAdult ? true : false,
         notes: selectedMember.notes,
-        phone: phoneNumber,
-        street: selectedMember.address?.street || '',
+        phone: selectedMember.phone,
+        street: selectedMember.street || '',
         // address: {
         //   city: selectedMember.address?.city || '',
         //   area: selectedMember.address?.area || '',
@@ -59,12 +67,31 @@ export default function MemberManagementForm(props: Props) {
     }
   }, [selectedMember, reset]);
 
-  const onSubmit = (data: FieldType) => {
-    console.log("Success:", data);
+  const onSubmit = async(data: FieldType) => {
+    console.log("Form submitted:", data);
+
+    let result;
+    if (selectedMember) {
+      // If editing, call the update API
+      result = await putMembers(selectedMember.id, data);
+    } else {
+      // If adding a new member, call the add API
+      result = await postMembers(data);
+    }
+    const memberDatas = await fetchMembers(pagination.currentPage, rowsPerPage);
+    setMembersData(memberDatas.data);
+
+    console.log("API Result:", result);
+    if (result.message !== "successful") {
+      setErrorMessage(result.message);
+    }else{
+      setPagination(memberDatas.pagination)
+      onCancel();
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: 600, padding: '12px 0px' }}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: 600 }}>
       <FormControl fullWidth margin="normal">
         <FormLabel>姓名</FormLabel>
         <Controller
@@ -113,7 +140,7 @@ export default function MemberManagementForm(props: Props) {
           control={control}
           defaultValue={true}
           render={({ field }) => (
-            <RadioGroup {...field}>
+            <RadioGroup {...field} row>
               <FormControlLabel value={true} control={<Radio />} label="是" />
               <FormControlLabel value={false} control={<Radio />} label="否" />
             </RadioGroup>
@@ -187,7 +214,7 @@ export default function MemberManagementForm(props: Props) {
           name="notes"
           control={control}
           defaultValue=""
-          render={({ field }) => <TextField {...field} multiline rows={4} />}
+          render={({ field }) => <TextField {...field} multiline rows={2} />}
         />
       </FormControl>
 
@@ -213,3 +240,4 @@ export default function MemberManagementForm(props: Props) {
     </form>
   );
 }
+

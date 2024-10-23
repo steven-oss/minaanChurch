@@ -7,3 +7,33 @@ export const fetchMembers = async (page:number,pageSize:number):Promise<MembersR
         method:'GET',
     })
 }
+
+export const postMembers = async(data:any)=>{
+    return apiClient<any>({
+        url:`http://localhost:8000/members`,
+        method:'POST',
+        data:data
+    })
+}
+
+export const getMembersById =async(id:number)=>{
+    return apiClient<any>({
+        url:`http://localhost:8000/members/${id}`,
+        method:'GET'
+    })
+}
+
+export const putMembers = async(id:number,data:any) =>{
+    return apiClient<any>({
+        url:`http://localhost:8000/members/${id}?`,
+        method:'PUT',
+        data:data
+    })
+}
+
+export const getSearchMembers = async(username:any)=>{
+    return apiClient<any>({
+        url:`http://localhost:8000/members/search?username=${username}`,
+        method:'GET'
+    })
+}

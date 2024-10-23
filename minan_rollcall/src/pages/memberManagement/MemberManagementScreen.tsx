@@ -6,7 +6,7 @@ import { Box, Grid, Grid2 } from "@mui/material";
 import MemberManagementSearch from "../../components/memberManagement/MemberManagementSearch.tsx";
 import useApi from "../../hook/useApi.ts";
 import { fetchGenderData } from "../../api/genderApi.ts";
-import { fetchMembers } from "../../api/membersApi.ts";
+import { fetchMembers, getMembersById, getSearchMembers } from "../../api/membersApi.ts";
 
 export interface DataType {
   id: number;
@@ -59,10 +59,9 @@ export default function MemberManagementScreen() {
       setPagination(result.pagination);
       setMembersData(result.data); // Assuming result is of type DataType[]
     };
-  
     // 修改 useEffect 使其依賴 page 變化
     useEffect(() => {
-      fetchData(page,rowsPerPage); // Fetch based on the updated page
+        fetchData(page,rowsPerPage); // Fetch based on the updated page
     }, [page,rowsPerPage]); // 每次 page 改變都觸發
 
     const handleCreateButton = ()=>{
@@ -73,15 +72,18 @@ export default function MemberManagementScreen() {
       setOpen(false);
     }
    
-    const handleEditButton = (key:number)=>{
+    const handleEditButton = async(id:number)=>{
       setOpen(true);
-      console.log(key);
-      const memberData = getMemberById(key);
-      setSelectedMember(memberData);
+      console.log(id);
+      const memberData = await getMembersById(id);
+      setSelectedMember(memberData.data);
     };
       // 當輸入框改變時觸發的函數
-    const handleSearch = (value: string) => {
+    const handleSearch = async(value: string) => {
       setSearchText(value);
+      const result = await getSearchMembers(value);
+      console.log(result)
+      setMembersData(result.data);
     };
 
     return(
@@ -95,56 +97,7 @@ export default function MemberManagementScreen() {
             </Grid>
         </Grid>
           <MemberManagementTable onEditButton={handleEditButton} data={membersData} searchText={searchText} setPage={setPage} page={page} pagination={pagination} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}/>
-          <MemberManagementModal open={open} onCreateButtonCancel={handleCreateButtonCancel} selectedMember={selectedMember} genderData={genderData}/>
+          <MemberManagementModal open={open} onCreateButtonCancel={handleCreateButtonCancel} selectedMember={selectedMember} genderData={genderData} pagination={pagination} rowsPerPage={rowsPerPage} setPagination={setPagination} setMembersData={setMembersData}/>
         </>
     )
-}
-
-function getMemberById(id:number) {
-  switch (id){
-    case 1:
-      return{
-        id,
-        username: "魏榮光",
-        gender: "男",
-        isAdult:true,
-        notes:'牧師',
-        phone:'+886 123456789',
-        address: {
-          city: 'NewTaipei',
-          area: 'Sindrum',
-          street: '龍安路441號5F'
-        }
-      };
-    case 2:
-      return{
-        id,
-        username: "李孟芹",
-        gender: "女",
-        isAdult:true,
-        notes:'師母',
-        phone:'+886 123456789',
-        address: {
-          city: 'NewTaipei',
-          area: 'Sindrum',
-          street: '龍安路441號5F'
-        }
-      };
-    case 3:
-      return{
-        id,
-        username: "魏蘿苡",
-        gender: "女",
-        isAdult:false,
-        notes:'牧師的女兒',
-        phone:'+886 123456789',
-        address: {
-          city: 'NewTaipei',
-          area: 'Sindrum',
-          street: '龍安路441號5F'
-        }
-      };
-    default:
-      return null;
-  }
 }
