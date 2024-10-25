@@ -31,9 +31,9 @@ export const putMembers = async(id:number,data:any) =>{
     })
 }
 
-export const getSearchMembers = async(username:any)=>{
+export const getSearchMembers = async(username:any,page?:number,pageSize?:number)=>{
     return apiClient<any>({
-        url:`http://localhost:8000/members/search?username=${username}`,
+        url:`http://localhost:8000/members/search?username=${username}&page=${page}&pageSize=${pageSize}`,
         method:'GET'
     })
 }

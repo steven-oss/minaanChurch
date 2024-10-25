@@ -62,7 +62,7 @@ export default function MemberManagementScreen() {
     // 修改 useEffect 使其依賴 page 變化
     useEffect(() => {
         fetchData(page,rowsPerPage); // Fetch based on the updated page
-    }, [page,rowsPerPage]); // 每次 page 改變都觸發
+    }, []); // 每次 page 改變都觸發
 
     const handleCreateButton = ()=>{
       setOpen(true);
@@ -78,12 +78,37 @@ export default function MemberManagementScreen() {
       const memberData = await getMembersById(id);
       setSelectedMember(memberData.data);
     };
+
+      // 分頁變更處理
+    const handleChangePage = async(event: unknown, newPage: number) => {
+      setPage(newPage);
+      const result = await fetchMembers(newPage + 1, rowsPerPage);
+      setPagination(result.pagination);
+      setMembersData(result.data); 
+    };
+
+      // 行數變更處理
+    const handleChangeRowsPerPage = async(event: React.ChangeEvent<HTMLInputElement>) => {
+      if(!searchText){
+        const result = await fetchMembers(1, parseInt(event.target.value, 10));
+        setPagination(result.pagination);
+        setMembersData(result.data);
+      }else{
+        const result = await getSearchMembers(searchText,1, parseInt(event.target.value, 10));
+        setPagination(result.pagination);
+        setMembersData(result.data);
+      }
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0);
+    };
+
       // 當輸入框改變時觸發的函數
     const handleSearch = async(value: string) => {
       setSearchText(value);
       const result = await getSearchMembers(value);
-      console.log(result)
+      setPagination(result.pagination);
       setMembersData(result.data);
+      setPage(0);
     };
 
     return(
@@ -96,7 +121,7 @@ export default function MemberManagementScreen() {
             <MemberManagementButton actionName="新增會友" onClick={handleCreateButton} color="primary"/>
             </Grid>
         </Grid>
-          <MemberManagementTable onEditButton={handleEditButton} data={membersData} searchText={searchText} setPage={setPage} page={page} pagination={pagination} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage}/>
+          <MemberManagementTable onEditButton={handleEditButton} data={membersData} page={page} pagination={pagination} rowsPerPage={rowsPerPage} onChangePage={(event:unknown,newPage:number)=>handleChangePage(event,newPage)} onChangeRowsPerPage={(event:React.ChangeEvent<HTMLInputElement>)=>handleChangeRowsPerPage(event)}/>
           <MemberManagementModal open={open} onCreateButtonCancel={handleCreateButtonCancel} selectedMember={selectedMember} genderData={genderData} pagination={pagination} rowsPerPage={rowsPerPage} setPagination={setPagination} setMembersData={setMembersData}/>
         </>
     )
