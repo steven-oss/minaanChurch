@@ -4,7 +4,7 @@ import MemberManagementButton from './MemberManagementButton.tsx';
 import { DataPagination, DataType, MembersResponse } from '../../pages/memberManagement/MemberManagementScreen.tsx';
 import { fetchMembers } from '../../api/membersApi.ts';
 
-interface Column {
+export interface Column {
   title: string;
   dataIndex?: keyof DataType;
   render?: (record: DataType) => React.ReactNode;

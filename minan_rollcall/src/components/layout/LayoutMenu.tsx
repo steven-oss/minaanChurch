@@ -1,41 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs, Tab, AppBar, Box, Toolbar } from "@mui/material";
 import LayoutTypography from "./LayoutTypography.tsx";
 
 export default function LayoutMenu() {
     const navigate = useNavigate();
-    const location = useLocation(); // Get the current location
+    const location = useLocation();
 
     const labels = ['點名表', '人數統計表', '會友管理'];
 
-    // Determine the default selected tab based on the current path
-    const getDefaultSelectedTab = () => {
-        switch (location.pathname) {
-            case '/RollCallListSelectScreen':
-                return 0;
-            case '/attendance-statistics':
-                return 1;
-            case '/MemberManagement':
-                return 2;
-            default:
-                return 2; // Default to the first item
+    // State to track the currently selected tab
+    const [selectedTab, setSelectedTab] = useState(0);
+
+    useEffect(() => {
+        const path = location.pathname;
+
+        if (path === '/RollCallListSelectScreen' || path === '/RollCallListSelectScreen/Worship') {
+            setSelectedTab(0);
+        } else if (path === '/attendance-statistics') {
+            setSelectedTab(1);
+        } else if (path === '/MemberManagement') {
+            setSelectedTab(2);
+        } else {
+            setSelectedTab(0);
         }
-    };
+    }, [location.pathname]);
 
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-        switch (newValue) {
-            case 0:
-                navigate('/RollCallListSelectScreen');
-                break;
-            case 1:
-                navigate('/attendance-statistics');
-                break;
-            case 2:
-                navigate('/MemberManagement');
-                break;
-            default:
-                break;
+        setSelectedTab(newValue); // Update selectedTab when tab is changed
+
+        if (newValue === 0) {
+            navigate('/RollCallListSelectScreen');
+        } else if (newValue === 1) {
+            navigate('/attendance-statistics');
+        } else if (newValue === 2) {
+            navigate('/MemberManagement');
         }
     };
 
@@ -45,12 +44,20 @@ export default function LayoutMenu() {
                 <LayoutTypography text={"民安教會後台管理"} variant={'h4'} />
                 <Box>
                     <Tabs
-                        sx={{color:"#ffffff"}}
-                        value={getDefaultSelectedTab()} // Use dynamic selected tab
-                        onChange={handleTabChange} // Handle tab change
+                        sx={{ color: "#ffffff" }}
+                        value={selectedTab}
+                        onChange={handleTabChange}
                     >
                         {labels.map((label, index) => (
-                            <Tab key={index} label={label} sx={{ color: "#ffffff", '&.Mui-selected': { color: '#ffffff' }, '&.Mui-focusVisible': { outline: 'none' } }} />
+                            <Tab
+                                key={index}
+                                label={label}
+                                sx={{
+                                    color: "#ffffff",
+                                    '&.Mui-selected': { color: '#ffffff' },
+                                    '&.Mui-focusVisible': { outline: 'none' }
+                                }}
+                            />
                         ))}
                     </Tabs>
                 </Box>

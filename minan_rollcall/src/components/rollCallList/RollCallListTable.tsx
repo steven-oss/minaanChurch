@@ -15,82 +15,71 @@ import {
 } from '@mui/material';
 import RollCallListCheckbox from './RollCallListCheckbox.tsx';
 import { DataType } from '../../pages/rollCallList/RollCallListWorshipScreen.tsx';
+import { DataPagination } from '../../pages/memberManagement/MemberManagementScreen.tsx';
+import { Column } from '../memberManagement/MemberManagementTable.tsx';
 
 interface Props {
   onChangeCheck: (key: number) => void;
-  setPage:(newPage:number)=>void;
-  page:number;
-  searchText:string;
-  filteredData:DataType[];
   data:DataType[];
+  page:number;
+  pagination:DataPagination;
+  rowsPerPage:number;
+  onChangePage:(event:unknown,page:number)=>void;
+  onChangeRowsPerPage:(event:React.ChangeEvent<HTMLInputElement>)=>void;
 }
 
 export default function RollCallListTable(props: Props) {
-  const { onChangeCheck,setPage,searchText,filteredData,data,page } = props;
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Rows per page state
+  const { onChangeCheck,data,page,pagination,rowsPerPage,onChangePage,onChangeRowsPerPage } = props;
+console.log(data)
 
-
-  // Define column configurations
-  const columns = [
-    { id: 'name', label: '姓名' },
-    { id: 'notes', label: '標記(小筆記)' },
-    { id: 'action', label: '簽到' },
+  const columns: Column[] = [
+    { title: '姓名', dataIndex: 'username' },
+    { title: '標記(小筆記)', dataIndex: 'notes' },
+    { title:'簽到',dataIndex:'check'}
   ];
-
-  // Handle page change
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  // Handle rows per page change
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page on change
-  };
-
-  const displayedData = searchText ? filteredData : data; // Determine which data to display
-  const paginatedData = displayedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage); // Get data for the current page
-
   return (
     <>
       <Box>
-        {/* Table */}
-        <TableContainer >
           <Table>
             <TableHead>
               <TableRow>
-                {columns.map((column) => (
-                  <TableCell key={column.id}>{column.label}</TableCell>
+                {columns.map((column,index) => (
+                  <TableCell key={index}>{column.title}</TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedData.map((record) => (
-                <TableRow key={record.key}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>
-                      {column.id === 'action' ? (
-                        <RollCallListCheckbox onChange={() => onChangeCheck(record.key)} />
+              {data.map((record) => (
+                <TableRow key={record.id}>
+                  {columns.map((column,index) => (
+                    <TableCell key={index}>
+                      {column.title === '簽到' ? (
+                        <RollCallListCheckbox onChange={() => onChangeCheck(record.id)} />
                       ) : (
-                        record[column.id as keyof DataType] // Dynamically access the value
+                        record[column.dataIndex as keyof DataType] // Dynamically access the value
                       )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
+              {data.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={columns.length} align="center">
+                    沒有找到匹配的數據
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
-        </TableContainer>
-
         {/* Pagination Controls */}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={displayedData.length}
+          count={pagination.totalMembers}
           rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+          page={pagination.totalMembers > 0 ? page : 0} // 確保當沒有成員時，頁數設為 0
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
         />
       </Box>
     </>

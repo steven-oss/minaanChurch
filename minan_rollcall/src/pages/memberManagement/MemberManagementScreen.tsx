@@ -18,6 +18,7 @@ export interface DataType {
   phone: string;
   createdAt:string;
   updateAt:string;
+  check?:boolean;
 }
 export interface GenderType{
   message:string;
@@ -51,18 +52,18 @@ export default function MemberManagementScreen() {
       totalMembers:1,
       totalPages:1
     })
-    const [rowsPerPage, setRowsPerPage] = useState(5); 
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const { data: genderData, loading, error } = useApi(fetchGenderData);
 
     const fetchData = async (currentPage: number,rowsPerPage:number) => {
       const result = await fetchMembers(currentPage + 1, rowsPerPage);
       setPagination(result.pagination);
-      setMembersData(result.data); // Assuming result is of type DataType[]
+      setMembersData(result.data); 
     };
-    // 修改 useEffect 使其依賴 page 變化
+
     useEffect(() => {
-        fetchData(page,rowsPerPage); // Fetch based on the updated page
-    }, []); // 每次 page 改變都觸發
+        fetchData(page,rowsPerPage);
+    }, []);
 
     const handleCreateButton = ()=>{
       setOpen(true);

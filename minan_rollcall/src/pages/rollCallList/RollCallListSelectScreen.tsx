@@ -5,6 +5,7 @@ import RollCallListButton from "../../components/rollCallList/RollCallListButton
 import RollCallListTypography from "../../components/rollCallList/RollCallListTypography.tsx";
 import RollCallListDynamicButton from "../../components/rollCallList/RollCallListDynamicButton.tsx";
 import RollCallListDatePicker from "../../components/rollCallList/RollCallListDatePicker.tsx";
+import { postRollCall } from "../../api/rollCallApi.ts";
 
 const ButtonRow = ({ children }: { children: React.ReactNode }) => (
     <Grid container justifyContent="center" sx={{ marginBottom: '10px' }}>
@@ -18,6 +19,7 @@ export default function RollCallListSelectScreen() {
     const [sessionIndex, setSessionIndex] = useState<number | null>(null);
     const [datePicker, setDatePicker] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const mode = [
         { key: 1, modeName: '華語禮拜' },
@@ -45,6 +47,18 @@ export default function RollCallListSelectScreen() {
         setDatePicker(dateString);
     };
 
+    const handleCreateRollCall = async()=>{
+        const date = {date:datePicker};
+        const result = await postRollCall(date);
+        if(result.code === 400){
+            setErrorMessage(result.message);
+            setTimeout(() => setErrorMessage(""), 2000);
+        }else{
+            setSuccessMessage(result.message);
+            setTimeout(() => setSuccessMessage(""), 2000);
+        }
+    }
+
     const handleStartRollCall = () => {
         if (datePicker) {
             navigate('Worship', { state: { date: datePicker } });
@@ -55,9 +69,11 @@ export default function RollCallListSelectScreen() {
 
     return (
         <>
-            {errorMessage && (
+            {(errorMessage || successMessage) && (
                 <Box sx={{ marginBottom: 2 }}>
-                    <Alert severity="error">{errorMessage}</Alert>
+                    <Alert severity={errorMessage ? "error" : "success"}>
+                        {errorMessage || successMessage}
+                    </Alert>
                 </Box>
             )}
             <ButtonRow>
@@ -88,7 +104,7 @@ export default function RollCallListSelectScreen() {
             </ButtonRow> */}
             <Grid container spacing={2} justifyContent="center">
                 <Grid item>
-                    <RollCallListButton onClick={handleStartRollCall} actionName="建立點名表" />
+                    <RollCallListButton onClick={handleCreateRollCall} actionName="建立點名表" />
                 </Grid>
                 <Grid item>
                     <RollCallListButton onClick={handleStartRollCall} actionName="開始點名" />
