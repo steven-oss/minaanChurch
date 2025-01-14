@@ -6,7 +6,7 @@ import RollCallListTable from "../../components/rollCallList/RollCallListTable.t
 import {  Grid } from "@mui/material";
 import RollCallListSearch from "../../components/rollCallList/RollCallListSearch.tsx";
 import RollCallListButton from "../../components/rollCallList/RollCallListButton.tsx";
-import { getRollCallPagination } from "../../api/rollCallApi.ts";
+import { getRollCallPagination, putRollCall } from "../../api/rollCallApi.ts";
 import { DataPagination } from "../memberManagement/MemberManagementScreen.tsx";
 
 export interface DataType {
@@ -21,9 +21,8 @@ export default function RollCallListWorshipScreen() {
 
     const { date, modeIndex, mode } = location.state || {};
     // const dateChange = moment(date.$d);
-    // console.log(modeIndex);
     const [searchText, setSearchText] = useState(''); // Store search text
-    const [rollCallData, setRollCallData] = useState<DataType[]>([]); // Store filtered data
+    const [rollCallData, setRollCallData] = useState<any>([]); // Store filtered data
     const [page, setPage] = useState(0); // Current page state
     const [pagination,setPagination] = useState<DataPagination>({
       currentPage:1,
@@ -32,15 +31,21 @@ export default function RollCallListWorshipScreen() {
       totalPages:1
     })
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    
+    const [onCheck,setOnCheck] = useState<boolean>(false);
     // Convert to yyyy-mm-dd format
     // const formattedDate = dateChange.format('YYYY-MM-DD');
 
     // const selectedMode = mode.find(item => item.key === modeIndex);
     // const modeName = selectedMode ? selectedMode.modeName : 'Unknown Mode';
     
-    const handleOnchangeCheck = (key: number) => {
-        console.log(key);
+    const handleOnchangeCheck = async(key: number) => {
+        const selectData =rollCallData.find((data:any)=>{
+          return data.id === key
+        });
+        const resultRollCall = await putRollCall(key,{check:!selectData.check});
+        const resultData = await getRollCallPagination(date,pagination.currentPage, rowsPerPage);
+        setPagination(resultData.pagination);
+        setRollCallData(resultData.data); 
     };
 
     const handleBackPage = () => {
@@ -85,7 +90,6 @@ export default function RollCallListWorshipScreen() {
         const result = await getRollCallPagination(date,currentPage + 1, rowsPerPage);
         setPagination(result.pagination);
         setRollCallData(result.data); 
-        console.log(result)
       };
   
       useEffect(() => {

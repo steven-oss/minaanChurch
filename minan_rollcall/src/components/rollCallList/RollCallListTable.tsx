@@ -20,7 +20,7 @@ import { Column } from '../memberManagement/MemberManagementTable.tsx';
 
 interface Props {
   onChangeCheck: (key: number) => void;
-  data:DataType[];
+  data:any;
   page:number;
   pagination:DataPagination;
   rowsPerPage:number;
@@ -30,7 +30,6 @@ interface Props {
 
 export default function RollCallListTable(props: Props) {
   const { onChangeCheck,data,page,pagination,rowsPerPage,onChangePage,onChangeRowsPerPage } = props;
-console.log(data)
 
   const columns: Column[] = [
     { title: '姓名', dataIndex: 'username' },
@@ -54,7 +53,7 @@ console.log(data)
                   {columns.map((column,index) => (
                     <TableCell key={index}>
                       {column.title === '簽到' ? (
-                        <RollCallListCheckbox onChange={() => onChangeCheck(record.id)} />
+                        <RollCallListCheckbox onChange={() => onChangeCheck(record.id)} checked={record.check}/>
                       ) : (
                         record[column.dataIndex as keyof DataType] // Dynamically access the value
                       )}

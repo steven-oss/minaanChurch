@@ -10,7 +10,7 @@ export default function LayoutMenu() {
     const labels = ['點名表', '人數統計表', '會友管理'];
 
     // State to track the currently selected tab
-    const [selectedTab, setSelectedTab] = useState(0);
+    const [selectedTab, setSelectedTab] = useState(2);
 
     useEffect(() => {
         const path = location.pathname;
@@ -22,7 +22,7 @@ export default function LayoutMenu() {
         } else if (path === '/MemberManagement') {
             setSelectedTab(2);
         } else {
-            setSelectedTab(0);
+            setSelectedTab(2);
         }
     }, [location.pathname]);
 
@@ -41,7 +41,7 @@ export default function LayoutMenu() {
     return (
         <AppBar position="static" sx={{ backgroundColor: '#000000' }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <LayoutTypography text={"民安教會後台管理"} variant={'h4'} />
+                <LayoutTypography text={"後台點名系統"} variant={'h4'} />
                 <Box>
                     <Tabs
                         sx={{ color: "#ffffff" }}

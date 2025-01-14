@@ -15,3 +15,11 @@ export const postRollCall = async(data:any)=>{
         data:data
     })
 }
+
+export const putRollCall = async(id:number,data:any)=>{
+    return apiClient<any>({
+        url:`http://localhost:8000/roll-call/update-check/${id}?`,
+        method:'PUT',
+        data:data
+    })
+}

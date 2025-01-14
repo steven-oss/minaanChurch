@@ -75,7 +75,6 @@ export default function MemberManagementScreen() {
    
     const handleEditButton = async(id:number)=>{
       setOpen(true);
-      console.log(id);
       const memberData = await getMembersById(id);
       setSelectedMember(memberData.data);
     };

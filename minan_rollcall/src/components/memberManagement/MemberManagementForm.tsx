@@ -46,7 +46,7 @@ interface Props {
 export default function MemberManagementForm(props: Props) {
   const { selectedMember,genderData,setErrorMessage,onCancel,pagination,rowsPerPage,setMembersData,setPagination } = props;
   const { control, handleSubmit, reset, formState: { errors } } = useForm<FieldType>();
-// console.log(control,errors )
+
   useEffect(() => {
     if (selectedMember) {
       reset({
@@ -68,7 +68,6 @@ export default function MemberManagementForm(props: Props) {
   }, [selectedMember, reset]);
 
   const onSubmit = async(data: FieldType) => {
-    console.log("Form submitted:", data);
 
     let result;
     if (selectedMember) {
@@ -81,7 +80,6 @@ export default function MemberManagementForm(props: Props) {
     const memberDatas = await fetchMembers(pagination.currentPage, rowsPerPage);
     setMembersData(memberDatas.data);
 
-    console.log("API Result:", result);
     if (result.message !== "successful") {
       setErrorMessage(result.message);
     }else{

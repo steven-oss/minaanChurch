@@ -51,10 +51,8 @@ export default function MemberManagementTable(props: Props) {
   // const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setRowsPerPage(parseInt(event.target.value, 10));
   //   setPage(0);
-  //   console.log('changeRowsPage')
 
   // };
-// console.log(data)
   // 計算要顯示的數據
   // const currentData = searchText ? data : data;
   // const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
